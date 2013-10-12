@@ -12,23 +12,32 @@ shallow object extend
 				a[key] = b[key]
 			a
 
-# µModel
+## µModel
 
 	class Model
+
+Default options
 
 		options:
 
 			separator: '/'
 
-		constructor: (
-			_data = {}, options
-		) ->
+		constructor: (_data = {}, options) ->
 
-			if
+Set options
+
+			if options
+				_.extend @options, options
+
+Get {Mixed}key
 
 		get: (key) ->
 
+Set {Mixed}key {Mixed}value
+
 		set: (key, value) ->
+
+Setnx {Mixed}key {Mixed}value
 
 		setnx: (key, value) ->
 

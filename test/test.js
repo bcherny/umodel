@@ -21,7 +21,7 @@ exports.umodel = {
     return test.done();
   },
   get: function(test) {
-    var actual, expected, model;
+    var actual, err, expected, model;
     model = new Model;
     model._data = {
       foo: 'bar',
@@ -35,6 +35,10 @@ exports.umodel = {
     actual = model.get('baz/moo');
     expected = 'boo';
     test.equal(actual, expected, 'deep get');
+    err = function() {
+      return model.get('woo');
+    };
+    test.throws(err, null, 'getting an undefined key throws an error');
     return test.done();
   },
   set: function(test) {
@@ -68,10 +72,7 @@ exports.umodel = {
     model.setnx('baz.moo', 'woo');
     actual = model._data.baz.moo;
     expected = 'boo';
-    return test.equal(actual, expected, 'deep setnx sets does not override once set');
-  },
-  change: function(test) {
-    var model;
-    return model = new Model;
+    test.equal(actual, expected, 'deep setnx sets does not override once set');
+    return test.done();
   }
 };

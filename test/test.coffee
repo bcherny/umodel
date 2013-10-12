@@ -39,6 +39,10 @@ exports.umodel =
 		expected = 'boo'
 		test.equal actual, expected, 'deep get'
 
+		# error
+		err = -> model.get 'woo'
+		test.throws err, null, 'getting an undefined key throws an error'
+
 		test.done()
 
 	set: (test) ->
@@ -91,7 +95,20 @@ exports.umodel =
 
 		test.equal actual, expected, 'deep setnx sets does not override once set'
 
-	change: (test) ->
+		test.done()
 
-		model = new Model
+	# on: (test) ->
+
+	# 	model = new Model
+
+	# 	calledGet = false
+	# 	calledSet = false
+	# 	calledSetnx = false
+
 		
+	# 	model.on 'set', -> calledSet = true
+	# 	model.on 'setnx', -> calledSetnx = true
+
+	# 	# get
+	# 	model.on 'get', -> calledGet = true
+	# 	model.get ''
