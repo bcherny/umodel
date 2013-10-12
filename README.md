@@ -5,14 +5,22 @@ Tiny, generic, fully tested model.
 ## API
 
 ```coffee
-model = require 'umodel'
+Model = require 'umodel'
 
-model.set 'foo', 'bar'
+model = new Model
+	foo: 'bar'
+# => model
 
 model.get 'foo'
+# => 'bar'
 
 model.set 'bar/baz', (beans) -> 'stew'
+# => model
+
+model.get 'bar/baz'
+# => [Function]
 
 # set only if the key "tomato" is not yet set.
 model.setnx 'tomato', 'potato'
+# => model
 ```
