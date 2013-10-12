@@ -1,142 +1,97 @@
 
-util = require '../matrix-utilities'
+Model = require '../umodel'
 
-exports.Identity = (test) ->
+exports.umodel =
 
-	actual = new util.Identity()
-	expected = [
-		[1, 0, 0, 0]
-		[0, 1, 0, 0]
-		[0, 0, 1, 0]
-		[0, 0, 0, 1]
-	]
+	init: (test) ->
 
-	test.deepEqual actual, expected
-	test.done()
+		# with data
+		model = new Model foo: bar
+		actual = model._data.foo
+		expected = 'bar'
 
-exports.multiply = (test) ->
+		test.equal actual, expected, 'initializes with data'
 
-	one = [
-		[1, 2, 3]
-		[4, 5, 6]
-		[7, 8, 9]
-	]
+		# with options
+		model = new Model {}, separator: '.'
+		actual = model.options.separator
+		expected = '.'
 
-	two = [
-		[1, 2]
-		[3, 4]
-		[5, 6]
-	]
+		test.equal actual, expected, 'initializes with options'
 
-	# multiply 3x3 x 2x3
+		test.done()
 
-	actual = util.multiply one, two
-	expected = [
-		[ 1*1 + 2*3 + 3*5 , 1*2 + 2*4 + 3*6 ]
-		[ 4*1 + 5*3 + 6*5 , 4*2 + 5*4 + 6*6 ]
-		[ 7*1 + 8*3 + 9*5 , 7*2 + 8*4 + 9*6 ]
-	]
+	get: (test) ->
 
-	test.deepEqual actual, expected
+		model = new Model
+		model._data =
+			foo: 'bar'
+			baz:
+				moo: 'boo'
 
-	# multiply 4x4 x 4x4
+		# shallow
+		actual = model.get 'foo'
+		expected = 'bar'
+		test.equal actual, expected, 'shallow get'
 
-	one = [
-		[1, 2, 3, 4]
-		[5, 6, 7, 8]
-		[9, 10, 11, 12]
-		[13, 14, 15, 16]
-	]
+		# deep
+		actual = model.get 'baz/moo'
+		expected = 'boo'
+		test.equal actual, expected, 'deep get'
 
-	two = [
-		[1, 2, 3, 4]
-		[5, 6, 7, 8]
-		[9, 10, 11, 12]
-		[13, 14, 15, 16]
-	]
+		test.done()
 
-	actual = util.multiply one, two
-	expected = [
-		[90, 100, 110, 120]
-		[202, 228, 254, 280]
-		[314, 356, 398, 440]
-		[426, 484, 542, 600]
-	]
+	set: (test) ->
 
-	test.deepEqual actual, expected
+		model = new Model
 
-	test.done()
+		# shallow
+		model.set 'foo', 'bar'
+		actual = model._data.foo
+		expected = 'bar'
+		test.equal actual, expected, 'shallow set'
 
-exports.flip = (test) ->
+		# deep
+		model.set 'baz.moo', 'boo'
+		actual = model._data.baz.moo
+		expected = 'boo'
+		test.equal actual, expected, 'deep set'
 
-	# 2x2
+		test.done()
 
-	matrix = [
-		[1, 2]
-		[3, 4]
-	]
+	setnx: (test) ->
 
-	actual = util.flip matrix
-	expected = [
-		[1, 3]
-		[2, 4]
-	]
+		model = new Model
 
-	test.deepEqual actual, expected
+		# shallow set
+		model.setnx 'foo', 'bar'
+		actual = model._data.foo
+		expected = 'bar'
 
-	# 4x4
+		test.equal actual, expected, 'shallow setnx sets'
 
-	matrix = [
-		[1, 2, 3, 4]
-		[5, 6, 7, 8]
-		[9, 10, 11, 12]
-		[13, 14, 15, 16]
-	]
+		# shallow set doesn't override
+		model.setnx 'foo', 'baz'
+		actual = model._data.foo
+		expected = 'bar'
 
-	actual = util.flip matrix
-	expected = [
-		[1, 5, 9, 13]
-		[2, 6, 10, 14]
-		[3, 7, 11, 15]
-		[4, 8, 12, 16]
-	]
+		test.equal actual, expected, 'shallow setnx does not override once set'
 
-	test.deepEqual actual, expected
+		# deep set
+		model.setnx 'baz.moo', 'boo'
+		actual = model._data.baz.moo
+		expected = 'boo'
 
-	test.done()
+		test.equal actual, expected, 'deep setnx sets'
 
-exports.to2d = (test) ->
+		# deep set doesn't override
+		model.setnx 'baz.moo', 'woo'
+		actual = model._data.baz.moo
+		expected = 'boo'
 
-	matrix = [
-		[1, 2, 3, 4]
-		[5, 6, 7, 8]
-		[9, 10, 11, 12]
-		[13, 14, 15, 16]
-	]
+		test.equal actual, expected, 'deep setnx sets does not override once set'
 
-	actual = util.to2d matrix
-	expected = [
-		[1, 2, 4]
-		[5, 6, 8]
-	]
+	change: (test) ->
 
-	test.deepEqual actual, expected
-	test.done()
-
-exports.to3d = (test) ->
-
-	matrix = [
-		[1, 2, 3]
-		[4, 5, 6]
-	]
-
-	actual = util.to3d matrix
-	expected = [
-		[1, 2, 0, 3]
-		[4, 5, 0, 6]
-		[0, 0, 1, 0]
-		[0, 0, 0, 1]
-	]
-
-	test.deepEqual actual, expected
-	test.done()
+		model = new Model
+		
