@@ -30,6 +30,14 @@
       return this._get(this._split(key));
     };
 
+    Model.prototype.set = function(key, value) {
+      return this._set(this._split(key), value);
+    };
+
+    Model.prototype.setnx = function(key, value) {
+      return this._set(this._split(key), value, true);
+    };
+
     Model.prototype._get = function(key, parent, accumulator) {
       var head;
       if (parent == null) {
@@ -41,7 +49,7 @@
       head = key.shift();
       if (head) {
         if (!(head in parent)) {
-          throw new Error('key "' + head + '" does not exist in "' + accumulator.join('/') + '"');
+          throw new Error('get: key "' + head + '" does not exist in "' + accumulator.join('/') + '"');
         }
         accumulator.push(head);
         return this._get(key, parent[head], accumulator);
@@ -61,26 +69,29 @@
       return key.split(separator);
     };
 
-    Model.prototype.set = function(key, value) {
-      return this._set(this._split(key), value);
-    };
-
-    Model.prototype._set = function(key, value, parent) {
+    Model.prototype._set = function(key, value, nx, parent, accumulator) {
       var head;
+      if (nx == null) {
+        nx = false;
+      }
       if (parent == null) {
         parent = this._data;
+      }
+      if (accumulator == null) {
+        accumulator = [];
       }
       head = key.shift();
       if (key.length) {
         if (!(head in parent)) {
           parent[head] = {};
         }
-        return this._set(key, value, parent[head]);
+        accumulator.push(head);
+        return this._set(key, value, nx, parent[head], accumulator);
       }
-      return parent[head] = value;
+      if (!(nx && head in parent)) {
+        return parent[head] = value;
+      }
     };
-
-    Model.prototype.setnx = function(key, value) {};
 
     return Model;
 

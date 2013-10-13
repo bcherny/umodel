@@ -69,7 +69,7 @@ exports.umodel = {
     actual = model._data.baz.moo;
     expected = 'boo';
     test.equal(actual, expected, 'deep setnx sets');
-    model.setnx('baz.moo', 'woo');
+    model.setnx('baz/moo', 'woo');
     actual = model._data.baz.moo;
     expected = 'boo';
     test.equal(actual, expected, 'deep setnx sets does not override once set');

@@ -36,6 +36,19 @@ get {Mixed}key
 
 			@_get @_split key
 
+### Set
+set {Mixed}key {Mixed}value
+
+		set: (key, value) ->
+
+			@_set @_split(key), value
+			
+Setnx {Mixed}key {Mixed}value
+
+		setnx: (key, value) ->
+
+			@_set @_split(key), value, true
+
 ### _get
 Internal `get` implementation. `accumulator` is for debugging purposes, to return the last defined key when a key is undefined
 
@@ -52,7 +65,7 @@ Ensure that the key is defined
 Throw an error if key does not exist
 
 				if head not of parent
-					throw new Error 'key "' + head + '" does not exist in "' + accumulator.join('/') + '"'
+					throw new Error 'get: key "' + head + '" does not exist in "' + accumulator.join('/') + '"'
 
 Otherwise, accumulate successful lookups for debugging purposes
 
@@ -89,16 +102,10 @@ Split by separator
 
 			key.split separator
 
-### Set
-set {Mixed}key {Mixed}value
-
-		set: (key, value) ->
-
-			@_set @_split(key), value
-
 ### Internal `set` implementation
+`nx` is a flag for "set only if the given key has not been set yet". `accumulator` is a key trace for debugging purposes
 
-		_set: (key, value, parent = @_data) ->
+		_set: (key, value, nx = false, parent = @_data, accumulator = []) ->
 
 Get the next key
 
@@ -112,17 +119,18 @@ Lazy create key in chain?
 
 					parent[head] = {}
 
+Accumulate successful lookups for debug purposes
+
+				accumulator.push head
+
 Recurse to our parent key
 
-				return @_set key, value, parent[head]
+				return @_set key, value, nx, parent[head], accumulator
 
-Set and return
+Set and return *if* `setnx` and the key already exists, throw an error
 
-			parent[head] = value
-			
-Setnx {Mixed}key {Mixed}value
-
-		setnx: (key, value) ->
+			if not (nx and head of parent)
+				parent[head] = value
 
 UMD (play nice with AMD, CommonJS, globals)
 

@@ -89,7 +89,7 @@ exports.umodel =
 		test.equal actual, expected, 'deep setnx sets'
 
 		# deep set doesn't override
-		model.setnx 'baz.moo', 'woo'
+		model.setnx 'baz/moo', 'woo'
 		actual = model._data.baz.moo
 		expected = 'boo'
 
