@@ -41,13 +41,12 @@
       head = key.shift();
       if (head) {
         if (!(head in parent)) {
-          throw new Error('key "' + head + '" does not exist in ' + accumulator.join('/'));
+          throw new Error('key "' + head + '" does not exist in "' + accumulator.join('/') + '"');
         }
         accumulator.push(head);
         return this._get(key, parent[head], accumulator);
-      } else {
-        return parent;
       }
+      return parent;
     };
 
     Model.prototype.set = function(key, value) {};

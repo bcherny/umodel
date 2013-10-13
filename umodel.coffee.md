@@ -45,12 +45,14 @@ Get the next key
 
 			head = key.shift()
 
+Ensure that the key is defined
+
 			if head
 
 Throw an error if key does not exist
 
 				if head not of parent
-					throw new Error 'key "' + head + '" does not exist in ' + accumulator.join('/')
+					throw new Error 'key "' + head + '" does not exist in "' + accumulator.join('/') + '"'
 
 Otherwise, accumulate successful lookups for debugging purposes
 
@@ -58,13 +60,11 @@ Otherwise, accumulate successful lookups for debugging purposes
 
 Recurse over the next deepest object
 
-				@_get key, parent[head], accumulator
+				return @_get key, parent[head], accumulator
 
 Return the result
 
-			else
-
-				parent
+			parent
 
 Set {Mixed}key {Mixed}value
 
