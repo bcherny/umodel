@@ -56,7 +56,7 @@ exports.umodel =
 		test.equal actual, expected, 'shallow set'
 
 		# deep
-		model.set 'baz.moo', 'boo'
+		model.set 'baz/moo', 'boo'
 		actual = model._data.baz.moo
 		expected = 'boo'
 		test.equal actual, expected, 'deep set'
@@ -82,7 +82,7 @@ exports.umodel =
 		test.equal actual, expected, 'shallow setnx does not override once set'
 
 		# deep set
-		model.setnx 'baz.moo', 'boo'
+		model.setnx 'baz/moo', 'boo'
 		actual = model._data.baz.moo
 		expected = 'boo'
 
