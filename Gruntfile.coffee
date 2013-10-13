@@ -6,7 +6,7 @@ module.exports = (grunt) ->
 
 			compile:
 				files:
-					'matrix-utilities.js': 'matrix-utilities.coffee'
+					'umodel.js': 'umodel.coffee'
 
 		uglify:
 
@@ -21,8 +21,8 @@ module.exports = (grunt) ->
 
 			standard:
 				files:
-					'matrix-utilities.min.js': [
-						'matrix-utilities.js'
+					'umodel.min.js': [
+						'umodel.js'
 					]
 
 
