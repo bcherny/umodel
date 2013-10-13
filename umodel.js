@@ -30,14 +30,21 @@
       return this._get(key.split(this.options.separator));
     };
 
-    Model.prototype._get = function(key, parent) {
+    Model.prototype._get = function(key, parent, accumulator) {
       var head;
       if (parent == null) {
         parent = this._data;
       }
+      if (accumulator == null) {
+        accumulator = [];
+      }
       head = key.shift();
-      if (head && head in parent) {
-        return this._get(key, parent[head]);
+      if (head) {
+        if (!(head in parent)) {
+          throw new Error('key "' + head + '" does not exist in ' + accumulator.join('/'));
+        }
+        accumulator.push(head);
+        return this._get(key, parent[head], accumulator);
       } else {
         return parent;
       }

@@ -29,21 +29,38 @@ Set options
 			if options
 				_.extend @options, options
 
-Get {Mixed}key
+### Get
+get {Mixed}key
 
 		get: (key) ->
 
 			@_get key.split(@options.separator)
 
-Internal `get` implementation
+### Internal `get` implementation
+`accumulator` is for debugging purposes, to return the last defined key when a key is undefined
 
-		_get: (key, parent = @_data) ->
+		_get: (key, parent = @_data, accumulator = []) ->
+
+Get the next key
 
 			head = key.shift()
 
-			if head and head of parent
+			if head
 
-				@_get key, parent[head]
+Throw an error if key does not exist
+
+				if head not of parent
+					throw new Error 'key "' + head + '" does not exist in ' + accumulator.join('/')
+
+Otherwise, accumulate successful lookups for debugging purposes
+
+				accumulator.push head
+
+Recurse over the next deepest object
+
+				@_get key, parent[head], accumulator
+
+Return the result
 
 			else
 
