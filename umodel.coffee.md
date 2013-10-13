@@ -22,7 +22,7 @@ Default options
 
 			separator: '/'
 
-		constructor: (_data = {}, options) ->
+		constructor: (@_data = {}, options) ->
 
 Set options
 
@@ -32,6 +32,22 @@ Set options
 Get {Mixed}key
 
 		get: (key) ->
+
+			@_get key.split(@options.separator)
+
+Internal `get` implementation
+
+		_get: (key, parent = @_data) ->
+
+			head = key.shift()
+
+			if head and head of parent
+
+				@_get key, parent[head]
+
+			else
+
+				parent
 
 Set {Mixed}key {Mixed}value
 

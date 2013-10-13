@@ -20,15 +20,28 @@
     };
 
     function Model(_data, options) {
-      if (_data == null) {
-        _data = {};
-      }
+      this._data = _data != null ? _data : {};
       if (options) {
         _.extend(this.options, options);
       }
     }
 
-    Model.prototype.get = function(key) {};
+    Model.prototype.get = function(key) {
+      return this._get(key.split(this.options.separator));
+    };
+
+    Model.prototype._get = function(key, parent) {
+      var head;
+      if (parent == null) {
+        parent = this._data;
+      }
+      head = key.shift();
+      if (head && head in parent) {
+        return this._get(key, parent[head]);
+      } else {
+        return parent;
+      }
+    };
 
     Model.prototype.set = function(key, value) {};
 
