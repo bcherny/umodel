@@ -1,5 +1,7 @@
 # µModel
 
+[![Build Status](https://travis-ci.org/eighttrackmind/umodel.png)](https://travis-ci.org/eighttrackmind/umodel.png)
+
 Tiny, generic, fully tested model.
 
 ```coffee
