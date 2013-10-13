@@ -22,9 +22,9 @@ Default options
 
 			separator: '/'
 
-		constructor: (@_data = {}, options) ->
-
 Set options
+
+		constructor: (@_data = {}, options) ->
 
 			if options
 				_.extend @options, options
