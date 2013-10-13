@@ -28,21 +28,22 @@ Set options
 			if options
 				_.extend @options, options
 
-### get
-get {Mixed}key
+### Get
+`get {Mixed}key`
 
 		get: (key) ->
 
 			@_get @_split key
 
 ### Set
-set {Mixed}key {Mixed}value
+`set {Mixed}key {Mixed}value`
 
 		set: (key, value) ->
 
 			@_set @_split(key), value
 			
-Setnx {Mixed}key {Mixed}value
+### SetNX
+`setnx {Mixed}key {Mixed}value`
 
 		setnx: (key, value) ->
 
