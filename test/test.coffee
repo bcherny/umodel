@@ -6,7 +6,7 @@ exports.umodel =
 	init: (test) ->
 
 		# with data
-		model = new Model foo: bar
+		model = new Model foo: 'bar'
 		actual = model._data.foo
 		expected = 'bar'
 

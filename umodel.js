@@ -15,12 +15,11 @@
   };
 
   Model = (function() {
-    Model.prototype.options = {
-      separator: '/'
-    };
-
     function Model(_data, options) {
       this._data = _data != null ? _data : {};
+      this.options = {
+        separator: '/'
+      };
       if (options) {
         _.extend(this.options, options);
       }

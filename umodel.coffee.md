@@ -16,15 +16,14 @@ shallow object extend
 
 	class Model
 
+		constructor: (@_data = {}, options) ->
+
 Default options
 
-		options:
-
-			separator: '/'
+			@options =
+				separator: '/'
 
 Set options
-
-		constructor: (@_data = {}, options) ->
 
 			if options
 				_.extend @options, options

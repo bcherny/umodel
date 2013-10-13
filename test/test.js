@@ -7,7 +7,7 @@ exports.umodel = {
   init: function(test) {
     var actual, expected, model;
     model = new Model({
-      foo: bar
+      foo: 'bar'
     });
     actual = model._data.foo;
     expected = 'bar';
