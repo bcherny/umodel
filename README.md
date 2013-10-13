@@ -15,12 +15,12 @@ model.get 'foo'
 # => 'bar'
 
 model.set 'bar/baz', (beans) -> 'stew'
-# => model
+# => [Function]
 
 model.get 'bar/baz'
 # => [Function]
 
 # set only if the key "tomato" is not yet set.
 model.setnx 'tomato', 'potato'
-# => model
+# => "potato"
 ```

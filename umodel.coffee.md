@@ -29,15 +29,15 @@ Set options
 			if options
 				_.extend @options, options
 
-### Get
+### get
 get {Mixed}key
 
 		get: (key) ->
 
 			@_get @_split key
 
-### Internal `get` implementation
-`accumulator` is for debugging purposes, to return the last defined key when a key is undefined
+### _get
+Internal `get` implementation. `accumulator` is for debugging purposes, to return the last defined key when a key is undefined
 
 		_get: (key, parent = @_data, accumulator = []) ->
 
@@ -66,16 +66,60 @@ Return the result
 
 			parent
 
+### _split
+Internal key parser, parses strings to arrays.
+
 		_split: (key) ->
 
-			key.split @options.separator
+			separator = @options.separator
 
-Set {Mixed}key {Mixed}value
+Trim leading separator?
+
+			if key.charAt(0) is separator
+
+				key = key.slice 1
+
+Trim trailing separator?
+
+			if key.charAt(key.length - 1) is separator
+
+				key = key.slice 0, -1
+
+Split by separator
+
+			key.split separator
+
+### Set
+set {Mixed}key {Mixed}value
 
 		set: (key, value) ->
 
-			key = @_split key
+			@_set @_split(key), value
 
+### Internal `set` implementation
+
+		_set: (key, value, parent = @_data) ->
+
+Get the next key
+
+			head = key.shift()
+
+			if key.length
+
+Lazy create key in chain?
+
+				if head not of parent
+
+					parent[head] = {}
+
+Recurse to our parent key
+
+				return @_set key, value, parent[head]
+
+Set and return
+
+			parent[head] = value
+			
 Setnx {Mixed}key {Mixed}value
 
 		setnx: (key, value) ->

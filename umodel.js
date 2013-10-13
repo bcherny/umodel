@@ -50,11 +50,34 @@
     };
 
     Model.prototype._split = function(key) {
-      return key.split(this.options.separator);
+      var separator;
+      separator = this.options.separator;
+      if (key.charAt(0) === separator) {
+        key = key.slice(1);
+      }
+      if (key.charAt(key.length - 1) === separator) {
+        key = key.slice(0, -1);
+      }
+      return key.split(separator);
     };
 
     Model.prototype.set = function(key, value) {
-      return key = this._split(key);
+      return this._set(this._split(key), value);
+    };
+
+    Model.prototype._set = function(key, value, parent) {
+      var head;
+      if (parent == null) {
+        parent = this._data;
+      }
+      head = key.shift();
+      if (key.length) {
+        if (!(head in parent)) {
+          parent[head] = {};
+        }
+        return this._set(key, value, parent[head]);
+      }
+      return parent[head] = value;
     };
 
     Model.prototype.setnx = function(key, value) {};
