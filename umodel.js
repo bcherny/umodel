@@ -27,7 +27,7 @@
     }
 
     Model.prototype.get = function(key) {
-      return this._get(key.split(this.options.separator));
+      return this._get(this._split(key));
     };
 
     Model.prototype._get = function(key, parent, accumulator) {
@@ -49,7 +49,13 @@
       return parent;
     };
 
-    Model.prototype.set = function(key, value) {};
+    Model.prototype._split = function(key) {
+      return key.split(this.options.separator);
+    };
+
+    Model.prototype.set = function(key, value) {
+      return key = this._split(key);
+    };
 
     Model.prototype.setnx = function(key, value) {};
 

@@ -34,7 +34,7 @@ get {Mixed}key
 
 		get: (key) ->
 
-			@_get key.split(@options.separator)
+			@_get @_split key
 
 ### Internal `get` implementation
 `accumulator` is for debugging purposes, to return the last defined key when a key is undefined
@@ -66,9 +66,15 @@ Return the result
 
 			parent
 
+		_split: (key) ->
+
+			key.split @options.separator
+
 Set {Mixed}key {Mixed}value
 
 		set: (key, value) ->
+
+			key = @_split key
 
 Setnx {Mixed}key {Mixed}value
 
