@@ -74,5 +74,84 @@ exports.umodel = {
     expected = 'boo';
     test.equal(actual, expected, 'deep setnx sets does not override once set');
     return test.done();
+  },
+  onAll: function(test) {
+    var calledGet, calledSet, calledSetnx, model;
+    model = new Model({
+      foo: {
+        bar: 'baz'
+      }
+    });
+    calledGet = false;
+    model.on('get', function() {
+      return calledGet = true;
+    });
+    model.get('foo');
+    test.equal(calledGet, true, 'on get all');
+    calledSet = false;
+    model.on('set', function() {
+      return calledSet = true;
+    });
+    model.set('foo/bar', 'moo');
+    test.equal(calledSet, true, 'on set all');
+    calledSetnx = false;
+    model.on('setnx', function() {
+      return calledSetnx = true;
+    });
+    model.setnx('foo/bar', 'moo');
+    test.equal(calledSetnx, true, 'on setnx all');
+    return test.done();
+  },
+  onProp: function(test) {
+    var calledGet, calledSet, calledSetnx, model;
+    model = new Model({
+      foo: {
+        bar: 'baz'
+      }
+    });
+    calledGet = false;
+    model.on('get: foo', function() {
+      return calledGet = true;
+    });
+    model.get('foo/bar');
+    test.equal(calledGet, true, 'on get prop');
+    calledSet = false;
+    model.on('set: foo', function() {
+      return calledSet = true;
+    });
+    model.set('foo/bar', 'moo');
+    test.equal(calledSet, true, 'on set prop');
+    calledSetnx = false;
+    model.on('setnx: foo', function() {
+      return calledSetnx = true;
+    });
+    model.setnx('foo/bar', 'moo');
+    test.equal(calledSetnx, true, 'on setnx prop');
+    return test.done();
+  },
+  onsProp: function(test) {
+    var calledAll, calledProp, model;
+    model = new Model({
+      foo: {
+        bar: 'baz'
+      }
+    });
+    calledAll = 0;
+    model.on('get set setnx', function() {
+      return calledAll++;
+    });
+    model.get('foo/bar');
+    model.set('foo/bar', 'moo');
+    model.setnx('foo/bar', 'moo');
+    test.equal(called, 3, 'on get set setnx all');
+    calledProp = 0;
+    model.on('get set setnx: foo', function() {
+      return calledProp++;
+    });
+    model.get('foo/bar');
+    model.set('foo/bar', 'moo');
+    model.setnx('foo/bar', 'moo');
+    test.equal(calledProp, 3, 'on get set setnx prop');
+    return test.done();
   }
 };

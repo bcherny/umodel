@@ -97,18 +97,77 @@ exports.umodel =
 
 		test.done()
 
-	# on: (test) ->
+	onAll: (test) ->
 
-	# 	model = new Model
+		model = new Model
+			foo:
+				bar: 'baz'
 
-	# 	calledGet = false
-	# 	calledSet = false
-	# 	calledSetnx = false
+		# get all
+		calledGet = false
+		model.on 'get', -> calledGet = true
+		model.get 'foo'
+		test.equal calledGet, true, 'on get all'
 
-		
-	# 	model.on 'set', -> calledSet = true
-	# 	model.on 'setnx', -> calledSetnx = true
+		# set all
+		calledSet = false
+		model.on 'set', -> calledSet = true
+		model.set 'foo/bar', 'moo'
+		test.equal calledSet, true, 'on set all'
 
-	# 	# get
-	# 	model.on 'get', -> calledGet = true
-	# 	model.get ''
+		# setnx all
+		calledSetnx = false
+		model.on 'setnx', -> calledSetnx = true
+		model.setnx 'foo/bar', 'moo'
+		test.equal calledSetnx, true, 'on setnx all'
+
+		test.done()
+
+	onProp: (test) ->
+
+		model = new Model
+			foo:
+				bar: 'baz'
+
+		# get all
+		calledGet = false
+		model.on 'get: foo', -> calledGet = true
+		model.get 'foo/bar'
+		test.equal calledGet, true, 'on get prop'
+
+		# set all
+		calledSet = false
+		model.on 'set: foo', -> calledSet = true
+		model.set 'foo/bar', 'moo'
+		test.equal calledSet, true, 'on set prop'
+
+		# setnx all
+		calledSetnx = false
+		model.on 'setnx: foo', -> calledSetnx = true
+		model.setnx 'foo/bar', 'moo'
+		test.equal calledSetnx, true, 'on setnx prop'
+
+		test.done()
+
+	onsProp: (test) ->
+
+		model = new Model
+			foo:
+				bar: 'baz'
+
+		# get all
+		calledAll = 0
+		model.on 'get set setnx', -> calledAll++
+		model.get 'foo/bar'
+		model.set 'foo/bar', 'moo'
+		model.setnx 'foo/bar', 'moo'
+		test.equal called, 3, 'on get set setnx all'
+
+		calledProp = 0
+		model.on 'get set setnx: foo', -> calledProp++
+		model.get 'foo/bar'
+		model.set 'foo/bar', 'moo'
+		model.setnx 'foo/bar', 'moo'
+		test.equal calledProp, 3, 'on get set setnx prop'
+
+		test.done()
