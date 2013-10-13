@@ -6,7 +6,7 @@
 Tiny, generic, fully tested model.
 
 ```coffee
-new umodel [data], [options]
+new umodel([data], [options])
 ```
 
 `data` {Object} initialize the model with some data
@@ -19,38 +19,42 @@ new umodel [data], [options]
 
 `umodel.`
 
-- `get key` get a key, throwing an error if a parent key is not set
-- `set key, value` set a key, lazy-creating parent keys along the way if nested
-- `setnx key, value` like `set`, but only if the given key has not been set yet
-- `on "event1 [event2...], :[property]", fn` call `fn` with `{key: value}, this` when an event is triggered
+- `get(key)` get a key, throwing an error if a parent key is not set
+- `set(key, value)` set a key, lazy-creating parent keys along the way if nested
+- `setnx(key, value)` like `set`, but only if the given key has not been set yet
+- `on("event1 [event2...], :[property]", fn)` call `fn` with `{key: value}, this` when an event is triggered
 
 ## Usage
 
-```coffee
-Model = require 'umodel'
+```js
+var Model = require('umodel')
 
-model = new Model
+var model = new Model({
 	foo: 'bar'
-# => model
+})
+//-> model
 
-model.get 'foo'
-# => 'bar'
+model.get('foo')
+//-> 'bar'
 
-model.set 'bar/baz', (beans) -> 'stew'
-# => [Function]
+model.set('bar/baz', function (beans) {
+	return 'stew'
+})
+//-> [Function]
 
-model.get 'bar/baz'
-# => [Function]
+model.get('bar/baz')
+//-> [Function]
 
-# set only if the key "tomato" is not yet set.
-model.setnx 'tomato', 'potato'
-# => "potato"
+// set only if the key "tomato" is not yet set.
+model.setnx('tomato', 'potato')
+//-> "potato"
 
-# call the function `callback` when any property is read
-callback = (changes, model) ->
-	...
-model.on 'get', callback
+// call the function `callback` when any property is read
+var callback = function (changes, model) { ... }
+model.on('get', callback)
+//-> undefined
 
-# call the function `callback` when `set` or `setnx` is called on `foo/bar` or any of its descendants (a more precisely specified version of the "change" event available in many mvc frameworks)
-model.on 'set setnx: foo/bar', callback
+// call the function `callback` when `set` or `setnx` is called on `foo/bar` or any of its descendants (a more precisely specified version of the "change" event available in many mvc frameworks)
+model.on('set setnx: foo/bar', callback)
+//-> undefined
 ```
