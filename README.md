@@ -11,7 +11,8 @@ new umodel [data], [options]
 `data` {Object} initialize the model with some data
 
 `options` {Object}
-	`separator` (default: `/`) separator for getting/setting nested keys
+
+- `separator` (default: `/`) separator for getting/setting nested keys
 
 ## API
 
