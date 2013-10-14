@@ -143,7 +143,7 @@ exports.umodel = {
     model.get('foo/bar');
     model.set('foo/bar', 'moo');
     model.setnx('foo/bar', 'moo');
-    test.equal(called, 3, 'on get set setnx all');
+    test.equal(calledAll, 3, 'on get set setnx all');
     calledProp = 0;
     model.on('get set setnx: foo', function() {
       return calledProp++;

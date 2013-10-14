@@ -11,7 +11,21 @@
         a[key] = b[key];
       }
       return a;
-    }
+    },
+    trim: (function() {
+      var head, tail;
+      if (''.trim) {
+        return function(string) {
+          return string.trim();
+        };
+      } else {
+        head = /^\s\s*/;
+        tail = /\s\s*$/;
+        return function(string) {
+          return string.replace(head, '').replace(tail, '');
+        };
+      }
+    })()
   };
 
   Model = (function() {
@@ -23,18 +37,74 @@
       if (options) {
         _.extend(this.options, options);
       }
+      this.events = {};
     }
 
     Model.prototype.get = function(key) {
+      this.trigger('get', key);
       return this._get(this._split(key));
     };
 
-    Model.prototype.set = function(key, value) {
-      return this._set(this._split(key), value);
+    Model.prototype.set = function(key, value, nx) {
+      if (nx == null) {
+        nx = false;
+      }
+      this.trigger('set', key);
+      return this._set(this._split(key), value, nx);
     };
 
     Model.prototype.setnx = function(key, value) {
-      return this._set(this._split(key), value, true);
+      this.trigger('setnx', key);
+      return this.set(key, value, true);
+    };
+
+    Model.prototype.on = function(eventAndProperty, fn) {
+      var event, events, parts, property, _i, _len, _results;
+      parts = eventAndProperty.split(':');
+      events = parts[0].split(' ');
+      property = this._normalize(parts[1] || '*');
+      _results = [];
+      for (_i = 0, _len = events.length; _i < _len; _i++) {
+        event = events[_i];
+        event = _.trim(event);
+        if (!(event in this.events)) {
+          this.events[event] = {};
+        }
+        if (!(property in this.events[event])) {
+          this.events[event][property] = [];
+        }
+        _results.push(this.events[event][property].push(fn));
+      }
+      return _results;
+    };
+
+    Model.prototype.trigger = function(event, path) {
+      var e, fn, fns, _ref, _results;
+      if (path == null) {
+        path = '*';
+      }
+      path = this._normalize(path);
+      if (event in this.events) {
+        _ref = this.events[event];
+        _results = [];
+        for (e in _ref) {
+          fns = _ref[e];
+          if (e === '*' || (path + '/').indexOf(e + '/') === 0) {
+            _results.push((function() {
+              var _i, _len, _results1;
+              _results1 = [];
+              for (_i = 0, _len = fns.length; _i < _len; _i++) {
+                fn = fns[_i];
+                _results1.push(fn.call(this, path, void 0, this));
+              }
+              return _results1;
+            }).call(this));
+          } else {
+            _results.push(void 0);
+          }
+        }
+        return _results;
+      }
     };
 
     Model.prototype._get = function(key, parent, accumulator) {
@@ -56,16 +126,21 @@
       return parent;
     };
 
-    Model.prototype._split = function(key) {
+    Model.prototype._normalize = function(key) {
       var separator;
       separator = this.options.separator;
+      key = _.trim(key);
       if (key.charAt(0) === separator) {
         key = key.slice(1);
       }
       if (key.charAt(key.length - 1) === separator) {
         key = key.slice(0, -1);
       }
-      return key.split(separator);
+      return key;
+    };
+
+    Model.prototype._split = function(key) {
+      return (this._normalize(key)).split(this.options.separator);
     };
 
     Model.prototype._set = function(key, value, nx, parent, accumulator) {

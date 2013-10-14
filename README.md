@@ -1,7 +1,7 @@
 # µModel
 
-[![browser support](https://ci.testling.com/eighttrackmind/umodel.png)](https://ci.testling.com/eighttrackmind/umodel)
 [![Build Status](https://travis-ci.org/eighttrackmind/umodel.png)](https://travis-ci.org/eighttrackmind/umodel.png)
+[![browser support](https://ci.testling.com/eighttrackmind/umodel.png)](https://ci.testling.com/eighttrackmind/umodel)
 
 Tiny, generic, fully tested model.
 
@@ -50,7 +50,7 @@ model.setnx('tomato', 'potato')
 //-> "potato"
 
 // call the function `callback` when any property is read
-var callback = function (changes, model) { ... }
+var callback = function (key, value, model) { ... }
 model.on('get', callback)
 //-> undefined
 
