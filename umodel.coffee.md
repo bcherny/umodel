@@ -57,7 +57,7 @@ Get and return
 ### Set
 `set {Mixed}key, {Mixed}value`
 
-		set: (key, value, nx = false) ->
+		set: (key, value) ->
 
 Trigger events?
 
@@ -65,7 +65,7 @@ Trigger events?
 
 Set and return
 
-			@_set @_split(key), value, nx
+			@_set @_split(key), value
 			
 ### SetNX
 `setnx {Mixed}key, {Mixed}value`
@@ -78,7 +78,7 @@ Trigger events?
 
 Set if key is not yet defined in our model and return
 
-			@set key, value, true
+			@_set @_split(key), value, true
 
 ### On
 `on {String}"event1 [event2...], :[property]", {Function}fn`
@@ -152,6 +152,36 @@ Return the result
 
 			parent
 
+### Internal `set` implementation
+`nx` is a flag for "set only if the given key has not been set yet". `accumulator` is a key trace for debugging purposes
+
+		_set: (key, value, nx = false, parent = @_data, accumulator = []) ->
+
+Get the next key
+
+			head = key.shift()
+
+			if key.length
+
+Lazy create key in chain?
+
+				if head not of parent
+
+					parent[head] = {}
+
+Accumulate successful lookups for debug purposes
+
+				accumulator.push head
+
+Recurse to our parent key
+
+				return @_set key, value, nx, parent[head], accumulator
+
+Set and return *if* `setnx` and the key already exists, throw an error
+
+			if not (nx and head of parent)
+				parent[head] = value
+
 ### _normalize
 Internal key normalizer
 
@@ -183,36 +213,6 @@ Internal key parser, parses strings to arrays.
 		_split: (key) ->
 
 			(@_normalize key).split @options.separator
-
-### Internal `set` implementation
-`nx` is a flag for "set only if the given key has not been set yet". `accumulator` is a key trace for debugging purposes
-
-		_set: (key, value, nx = false, parent = @_data, accumulator = []) ->
-
-Get the next key
-
-			head = key.shift()
-
-			if key.length
-
-Lazy create key in chain?
-
-				if head not of parent
-
-					parent[head] = {}
-
-Accumulate successful lookups for debug purposes
-
-				accumulator.push head
-
-Recurse to our parent key
-
-				return @_set key, value, nx, parent[head], accumulator
-
-Set and return *if* `setnx` and the key already exists, throw an error
-
-			if not (nx and head of parent)
-				parent[head] = value
 
 UMD (play nice with AMD, CommonJS, globals)
 

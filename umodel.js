@@ -45,17 +45,14 @@
       return this._get(this._split(key));
     };
 
-    Model.prototype.set = function(key, value, nx) {
-      if (nx == null) {
-        nx = false;
-      }
+    Model.prototype.set = function(key, value) {
       this.trigger('set', key);
-      return this._set(this._split(key), value, nx);
+      return this._set(this._split(key), value);
     };
 
     Model.prototype.setnx = function(key, value) {
       this.trigger('setnx', key);
-      return this.set(key, value, true);
+      return this._set(this._split(key), value, true);
     };
 
     Model.prototype.on = function(eventAndProperty, fn) {
@@ -126,23 +123,6 @@
       return parent;
     };
 
-    Model.prototype._normalize = function(key) {
-      var separator;
-      separator = this.options.separator;
-      key = _.trim(key);
-      if (key.charAt(0) === separator) {
-        key = key.slice(1);
-      }
-      if (key.charAt(key.length - 1) === separator) {
-        key = key.slice(0, -1);
-      }
-      return key;
-    };
-
-    Model.prototype._split = function(key) {
-      return (this._normalize(key)).split(this.options.separator);
-    };
-
     Model.prototype._set = function(key, value, nx, parent, accumulator) {
       var head;
       if (nx == null) {
@@ -165,6 +145,23 @@
       if (!(nx && head in parent)) {
         return parent[head] = value;
       }
+    };
+
+    Model.prototype._normalize = function(key) {
+      var separator;
+      separator = this.options.separator;
+      key = _.trim(key);
+      if (key.charAt(0) === separator) {
+        key = key.slice(1);
+      }
+      if (key.charAt(key.length - 1) === separator) {
+        key = key.slice(0, -1);
+      }
+      return key;
+    };
+
+    Model.prototype._split = function(key) {
+      return (this._normalize(key)).split(this.options.separator);
     };
 
     return Model;

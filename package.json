@@ -34,7 +34,7 @@
   "testling": {
     "files": "test/test.js",
     "browsers": {
-      "ie": [ 7, 8, 9 ],
+      "ie": [ 6, 7, 8, 9 ],
       "firefox": [ "nightly", 24, 23, 22, 21, 20 ],
       "chrome": [ "canary", 30, 25, 20, 15, 10 ],
       "safari": [ 6, 5, 4, 3 ],
