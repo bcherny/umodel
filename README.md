@@ -23,6 +23,7 @@ new umodel([data], [options])
 - `set(key, value)` set a key, lazy-creating parent keys along the way if nested
 - `setnx(key, value)` like `set`, but only if the given key has not been set yet
 - `on("event1 [event2...], :[property]", fn)` call `fn` with `{key: value}, this` when an event is triggered
+- `trigger(event, key)` trigger an event set with `.on`
 
 ## Usage
 
@@ -56,5 +57,9 @@ model.on('get', callback)
 
 // call the function `callback` when `set` or `setnx` is called on `foo/bar` or any of its descendants (a more precisely specified version of the "change" event available in many mvc frameworks)
 model.on('set setnx: foo/bar', callback)
+//-> undefined
+
+// trigger `callback` by emulating a `set` event with the key `foo` (doesn't mutate the model, just triggers callbacks)
+model.trigger('set', 'foo');
 //-> undefined
 ```
