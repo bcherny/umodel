@@ -61,7 +61,7 @@ Get and return
 
 Trigger events?
 
-			@trigger 'set', key
+			@trigger 'set', key, value
 
 Set and return
 
@@ -74,7 +74,7 @@ Set and return
 
 Trigger events?
 
-			@trigger 'setnx', key
+			@trigger 'setnx', key, value
 
 Set if key is not yet defined in our model and return
 
@@ -96,7 +96,7 @@ Set if key is not yet defined in our model and return
 ### Trigger
 Trigger 
 
-		trigger: (event, path = '*') ->
+		trigger: (event, path = '*', value) ->
 
 			path = @_normalize path
 
@@ -112,7 +112,7 @@ Add `/` to paths to prevent false positives (eg. `foo/ba` shouldn't match `foo/b
 
 Bind and call
 
-						fn.call @, path, undefined, @ for fn in fns
+						fn.call @, path, value, @ for fn in fns
 
 ### _get
 Internal `get` implementation. `accumulator` is for debugging purposes, to return the last defined key when a key is undefined
