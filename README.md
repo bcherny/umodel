@@ -1,7 +1,7 @@
 # µModel
 
-[![Build Status](https:#travis-ci.org/eighttrackmind/umodel.png)](https:#travis-ci.org/eighttrackmind/umodel.png)
-[![browser support](https:#ci.testling.com/eighttrackmind/umodel.png)](https:#ci.testling.com/eighttrackmind/umodel)
+[![Build Status](https://travis-ci.org/eighttrackmind/umodel.png)](https://travis-ci.org/eighttrackmind/umodel.png)
+[![browser support](https://ci.testling.com/eighttrackmind/umodel.png)](https://ci.testling.com/eighttrackmind/umodel)
 
 Tiny, generic, fully tested model.
 
