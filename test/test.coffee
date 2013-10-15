@@ -3,7 +3,7 @@ Model = require '../umodel'
 
 exports.umodel =
 
-	init: (test) ->
+	initialize: (test) ->
 
 		# with data
 		model = new Model foo: 'bar'
@@ -97,7 +97,7 @@ exports.umodel =
 
 		test.done()
 
-	onAll: (test) ->
+	'on (unspecified property)': (test) ->
 
 		model = new Model
 			foo:
@@ -123,25 +123,25 @@ exports.umodel =
 
 		test.done()
 
-	onProp: (test) ->
+	'on (one event)': (test) ->
 
 		model = new Model
 			foo:
 				bar: 'baz'
 
-		# get all
+		# get
 		calledGet = false
 		model.on 'get: foo', -> calledGet = true
 		model.get 'foo/bar'
 		test.equal calledGet, true, 'on get prop'
 
-		# set all
+		# set
 		calledSet = false
 		model.on 'set: foo', -> calledSet = true
 		model.set 'foo/bar', 'moo'
 		test.equal calledSet, true, 'on set prop'
 
-		# setnx all
+		# setnx
 		calledSetnx = false
 		model.on 'setnx: foo', -> calledSetnx = true
 		model.setnx 'foo/bar', 'moo'
@@ -149,7 +149,7 @@ exports.umodel =
 
 		test.done()
 
-	onsProp: (test) ->
+	'on (multiple events)': (test) ->
 
 		model = new Model
 			foo:
@@ -170,4 +170,23 @@ exports.umodel =
 		model.setnx 'foo/bar', 'moo'
 		test.equal calledProp, 3, 'on get set setnx prop'
 
+		test.done()
+
+	'on (called with object)': (test) ->
+
+		model = new Model
+			foo: 'bar'
+			bar: 'baz'
+
+		called = 0
+		call = -> called++
+
+		model.on
+			'get: foo': call
+			'get: bar': call
+
+		model.get 'foo'
+		model.get 'bar'
+
+		test.equal called, 2, 'on accepts objects'
 		test.done()

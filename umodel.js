@@ -56,6 +56,20 @@
     };
 
     Model.prototype.on = function(eventAndProperty, fn) {
+      var e, _results;
+      if (fn) {
+        return this._on(eventAndProperty, fn);
+      } else {
+        _results = [];
+        for (e in eventAndProperty) {
+          fn = eventAndProperty[e];
+          _results.push(this._on(e, fn));
+        }
+        return _results;
+      }
+    };
+
+    Model.prototype._on = function(eventAndProperty, fn) {
       var event, events, parts, property, _i, _len, _results;
       parts = eventAndProperty.split(':');
       events = parts[0].split(' ');

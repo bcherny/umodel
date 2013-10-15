@@ -4,7 +4,7 @@ var Model;
 Model = require('../umodel');
 
 exports.umodel = {
-  init: function(test) {
+  initialize: function(test) {
     var actual, expected, model;
     model = new Model({
       foo: 'bar'
@@ -75,7 +75,7 @@ exports.umodel = {
     test.equal(actual, expected, 'deep setnx sets does not override once set');
     return test.done();
   },
-  onAll: function(test) {
+  'on (unspecified property)': function(test) {
     var calledGet, calledSet, calledSetnx, model;
     model = new Model({
       foo: {
@@ -102,7 +102,7 @@ exports.umodel = {
     test.equal(calledSetnx, true, 'on setnx all');
     return test.done();
   },
-  onProp: function(test) {
+  'on (one event)': function(test) {
     var calledGet, calledSet, calledSetnx, model;
     model = new Model({
       foo: {
@@ -129,7 +129,7 @@ exports.umodel = {
     test.equal(calledSetnx, true, 'on setnx prop');
     return test.done();
   },
-  onsProp: function(test) {
+  'on (multiple events)': function(test) {
     var calledAll, calledProp, model;
     model = new Model({
       foo: {
@@ -152,6 +152,25 @@ exports.umodel = {
     model.set('foo/bar', 'moo');
     model.setnx('foo/bar', 'moo');
     test.equal(calledProp, 3, 'on get set setnx prop');
+    return test.done();
+  },
+  'on (called with object)': function(test) {
+    var call, called, model;
+    model = new Model({
+      foo: 'bar',
+      bar: 'baz'
+    });
+    called = 0;
+    call = function() {
+      return called++;
+    };
+    model.on({
+      'get: foo': call,
+      'get: bar': call
+    });
+    model.get('foo');
+    model.get('bar');
+    test.equal(called, 2, 'on accepts objects');
     return test.done();
   }
 };

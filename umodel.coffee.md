@@ -85,6 +85,16 @@ Set if key is not yet defined in our model and return
 
 		on: (eventAndProperty, fn) ->
 
+			if fn
+
+				@_on eventAndProperty, fn
+
+			else
+
+				@_on e, fn for e, fn of eventAndProperty
+
+		_on: (eventAndProperty, fn) ->
+
 			parts = eventAndProperty.split ':'
 			events = parts[0].split ' '
 			property = @_normalize parts[1] or '*'
