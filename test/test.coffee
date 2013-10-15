@@ -190,3 +190,18 @@ exports.umodel =
 
 		test.equal called, 2, 'on accepts objects'
 		test.done()
+
+	'trigger': (test) ->
+
+		model = new Model
+			foo:
+				bar: 'baz'
+
+		called = false
+		call = -> called = true
+
+		model.on 'get foo/bar', call
+		model.trigger 'get', 'foo/bar'
+
+		test.equal called, true, 'trigger triggers events'
+		test.done()

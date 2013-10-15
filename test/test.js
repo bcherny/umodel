@@ -172,5 +172,21 @@ exports.umodel = {
     model.get('bar');
     test.equal(called, 2, 'on accepts objects');
     return test.done();
+  },
+  'trigger': function(test) {
+    var call, called, model;
+    model = new Model({
+      foo: {
+        bar: 'baz'
+      }
+    });
+    called = false;
+    call = function() {
+      return called = true;
+    };
+    model.on('get foo/bar', call);
+    model.trigger('get', 'foo/bar');
+    test.equal(called, true, 'trigger triggers events');
+    return test.done();
   }
 };
