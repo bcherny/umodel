@@ -81,7 +81,7 @@ Set if key is not yet defined in our model and return
 			@_set @_split(key), value, true
 
 ### On
-`on {String}"event1 [event2...], :[property]", {Function}fn`
+`on {String}"event1 [event2...], :[property]", {Function}fn` or `on {Object}map`
 
 		on: (eventAndProperty, fn) ->
 
@@ -92,24 +92,6 @@ Set if key is not yet defined in our model and return
 			else
 
 				@_on e, fn for e, fn of eventAndProperty
-
-		_on: (eventAndProperty, fn) ->
-
-			parts = eventAndProperty.split ':'
-			events = parts[0].split ' '
-			property = @_normalize parts[1] or '*'
-
-			for event in events
-
-				event = _.trim event
-
-				if event not of @events
-					@events[event] = {}
-
-				if property not of @events[event]
-					@events[event][property] = []
-
-				@events[event][property].push fn
 
 ### Trigger
 Trigger 
@@ -191,6 +173,26 @@ Set and return *if* `setnx` and the key already exists, throw an error
 
 			if not (nx and head of parent)
 				parent[head] = value
+
+### Internal `on` implementation
+
+		_on: (eventAndProperty, fn) ->
+
+			parts = eventAndProperty.split ':'
+			events = parts[0].split ' '
+			property = @_normalize parts[1] or '*'
+
+			for event in events
+
+				event = _.trim event
+
+				if event not of @events
+					@events[event] = {}
+
+				if property not of @events[event]
+					@events[event][property] = []
+
+				@events[event][property].push fn
 
 ### _normalize
 Internal key normalizer

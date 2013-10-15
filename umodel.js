@@ -69,26 +69,6 @@
       }
     };
 
-    Model.prototype._on = function(eventAndProperty, fn) {
-      var event, events, parts, property, _i, _len, _results;
-      parts = eventAndProperty.split(':');
-      events = parts[0].split(' ');
-      property = this._normalize(parts[1] || '*');
-      _results = [];
-      for (_i = 0, _len = events.length; _i < _len; _i++) {
-        event = events[_i];
-        event = _.trim(event);
-        if (!(event in this.events)) {
-          this.events[event] = {};
-        }
-        if (!(property in this.events[event])) {
-          this.events[event][property] = [];
-        }
-        _results.push(this.events[event][property].push(fn));
-      }
-      return _results;
-    };
-
     Model.prototype.trigger = function(event, path) {
       var e, fn, fns, _ref, _results;
       if (path == null) {
@@ -159,6 +139,26 @@
       if (!(nx && head in parent)) {
         return parent[head] = value;
       }
+    };
+
+    Model.prototype._on = function(eventAndProperty, fn) {
+      var event, events, parts, property, _i, _len, _results;
+      parts = eventAndProperty.split(':');
+      events = parts[0].split(' ');
+      property = this._normalize(parts[1] || '*');
+      _results = [];
+      for (_i = 0, _len = events.length; _i < _len; _i++) {
+        event = events[_i];
+        event = _.trim(event);
+        if (!(event in this.events)) {
+          this.events[event] = {};
+        }
+        if (!(property in this.events[event])) {
+          this.events[event][property] = [];
+        }
+        _results.push(this.events[event][property].push(fn));
+      }
+      return _results;
     };
 
     Model.prototype._normalize = function(key) {
