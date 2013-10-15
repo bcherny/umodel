@@ -63,3 +63,7 @@ model.on('set setnx: foo/bar', callback)
 model.trigger('set', 'foo');
 //-> undefined
 ```
+
+## Todo
+
+- Add `.off()` method
