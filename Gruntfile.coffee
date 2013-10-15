@@ -6,7 +6,7 @@ module.exports = (grunt) ->
 
 			compile:
 				files:
-					'umodel.js': 'umodel.coffee'
+					'umodel.js': 'umodel.coffee.md'
 
 		uglify:
 

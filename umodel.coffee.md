@@ -12,6 +12,15 @@ shallow object extend
 				a[key] = b[key]
 			a
 
+		trim: do ->
+
+			if ''.trim
+				(string) -> string.trim()
+			else
+				head = /^\s\s*/
+				tail = /\s\s*$/
+				(string) -> string.replace(head, '').replace(tail, '')
+
 ## µModel
 
 	class Model
@@ -28,26 +37,82 @@ Set options
 			if options
 				_.extend @options, options
 
+Set events
+
+			@events = {}
+
 ### Get
 `get {Mixed}key`
 
 		get: (key) ->
 
+Trigger events?
+
+			@trigger 'get', key
+
+Get and return
+
 			@_get @_split key
 
 ### Set
-`set {Mixed}key {Mixed}value`
+`set {Mixed}key, {Mixed}value`
 
 		set: (key, value) ->
+
+Trigger events?
+
+			@trigger 'set', key, value
+
+Set and return
 
 			@_set @_split(key), value
 			
 ### SetNX
-`setnx {Mixed}key {Mixed}value`
+`setnx {Mixed}key, {Mixed}value`
 
 		setnx: (key, value) ->
 
+Trigger events?
+
+			@trigger 'setnx', key, value
+
+Set if key is not yet defined in our model and return
+
 			@_set @_split(key), value, true
+
+### On
+`on {String}"event1 [event2...], :[property]", {Function}fn` or `on {Object}map`
+
+		on: (eventAndProperty, fn) ->
+
+			if fn
+
+				@_on eventAndProperty, fn
+
+			else
+
+				@_on e, fn for e, fn of eventAndProperty
+
+### Trigger
+Trigger 
+
+		trigger: (event, path = '*', value) ->
+
+			path = @_normalize path
+
+			if event of @events
+
+Fire generic` event (with unspecified property), as well as events with matching properties
+
+				for e, fns of @events[event]
+
+Add `/` to paths to prevent false positives (eg. `foo/ba` shouldn't match `foo/bar`)
+
+					if e is '*' or (path + '/').indexOf(e + '/') is 0
+
+Bind and call
+
+						fn.call @, path, value, @ for fn in fns
 
 ### _get
 Internal `get` implementation. `accumulator` is for debugging purposes, to return the last defined key when a key is undefined
@@ -79,29 +144,6 @@ Return the result
 
 			parent
 
-### _split
-Internal key parser, parses strings to arrays.
-
-		_split: (key) ->
-
-			separator = @options.separator
-
-Trim leading separator?
-
-			if key.charAt(0) is separator
-
-				key = key.slice 1
-
-Trim trailing separator?
-
-			if key.charAt(key.length - 1) is separator
-
-				key = key.slice 0, -1
-
-Split by separator
-
-			key.split separator
-
 ### Internal `set` implementation
 `nx` is a flag for "set only if the given key has not been set yet". `accumulator` is a key trace for debugging purposes
 
@@ -131,6 +173,58 @@ Set and return *if* `setnx` and the key already exists, throw an error
 
 			if not (nx and head of parent)
 				parent[head] = value
+
+### Internal `on` implementation
+
+		_on: (eventAndProperty, fn) ->
+
+			parts = eventAndProperty.split ':'
+			events = parts[0].split ' '
+			property = @_normalize parts[1] or '*'
+
+			for event in events
+
+				event = _.trim event
+
+				if event not of @events
+					@events[event] = {}
+
+				if property not of @events[event]
+					@events[event][property] = []
+
+				@events[event][property].push fn
+
+### _normalize
+Internal key normalizer
+
+		_normalize: (key) ->
+
+			separator = @options.separator
+
+Trim whitespace
+
+			key = _.trim key
+
+Trim leading separator?
+
+			if key.charAt(0) is separator
+
+				key = key.slice 1
+
+Trim trailing separator?
+
+			if key.charAt(key.length - 1) is separator
+
+				key = key.slice 0, -1
+
+			key
+
+### _split
+Internal key parser, parses strings to arrays.
+
+		_split: (key) ->
+
+			(@_normalize key).split @options.separator
 
 UMD (play nice with AMD, CommonJS, globals)
 

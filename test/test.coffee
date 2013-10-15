@@ -3,7 +3,7 @@ Model = require '../umodel'
 
 exports.umodel =
 
-	init: (test) ->
+	initialize: (test) ->
 
 		# with data
 		model = new Model foo: 'bar'
@@ -97,18 +97,111 @@ exports.umodel =
 
 		test.done()
 
-	# on: (test) ->
+	'on (unspecified property)': (test) ->
 
-	# 	model = new Model
+		model = new Model
+			foo:
+				bar: 'baz'
 
-	# 	calledGet = false
-	# 	calledSet = false
-	# 	calledSetnx = false
+		# get all
+		calledGet = false
+		model.on 'get', -> calledGet = true
+		model.get 'foo'
+		test.equal calledGet, true, 'on get all'
 
-		
-	# 	model.on 'set', -> calledSet = true
-	# 	model.on 'setnx', -> calledSetnx = true
+		# set all
+		calledSet = false
+		model.on 'set', -> calledSet = true
+		model.set 'foo/bar', 'moo'
+		test.equal calledSet, true, 'on set all'
 
-	# 	# get
-	# 	model.on 'get', -> calledGet = true
-	# 	model.get ''
+		# setnx all
+		calledSetnx = false
+		model.on 'setnx', -> calledSetnx = true
+		model.setnx 'foo/bar', 'moo'
+		test.equal calledSetnx, true, 'on setnx all'
+
+		test.done()
+
+	'on (one event)': (test) ->
+
+		model = new Model
+			foo:
+				bar: 'baz'
+
+		# get
+		calledGet = false
+		model.on 'get: foo', -> calledGet = true
+		model.get 'foo/bar'
+		test.equal calledGet, true, 'on get prop'
+
+		# set
+		calledSet = false
+		model.on 'set: foo', -> calledSet = true
+		model.set 'foo/bar', 'moo'
+		test.equal calledSet, true, 'on set prop'
+
+		# setnx
+		calledSetnx = false
+		model.on 'setnx: foo', -> calledSetnx = true
+		model.setnx 'foo/bar', 'moo'
+		test.equal calledSetnx, true, 'on setnx prop'
+
+		test.done()
+
+	'on (multiple events)': (test) ->
+
+		model = new Model
+			foo:
+				bar: 'baz'
+
+		# get all
+		calledAll = 0
+		model.on 'get set setnx', -> calledAll++
+		model.get 'foo/bar'
+		model.set 'foo/bar', 'moo'
+		model.setnx 'foo/bar', 'moo'
+		test.equal calledAll, 3, 'on get set setnx all'
+
+		calledProp = 0
+		model.on 'get set setnx: foo', -> calledProp++
+		model.get 'foo/bar'
+		model.set 'foo/bar', 'moo'
+		model.setnx 'foo/bar', 'moo'
+		test.equal calledProp, 3, 'on get set setnx prop'
+
+		test.done()
+
+	'on (called with object)': (test) ->
+
+		model = new Model
+			foo: 'bar'
+			bar: 'baz'
+
+		called = 0
+		call = -> called++
+
+		model.on
+			'get: foo': call
+			'get: bar': call
+
+		model.get 'foo'
+		model.get 'bar'
+
+		test.equal called, 2, 'on accepts objects'
+		test.done()
+
+	'trigger': (test) ->
+
+		model = new Model
+			foo:
+				bar: 'baz'
+
+		called = false
+		call = -> called = true
+
+		model.on 'get foo/bar', call
+		model.trigger 'get', 'foo/bar'
+
+		test.equal called, true, 'trigger triggers events'
+		test.done()
