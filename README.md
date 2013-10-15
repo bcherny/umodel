@@ -6,7 +6,7 @@
 Tiny, generic, fully tested model.
 
 ```coffee
-new umodel([data], [options])
+new umodel [data], [options]
 ```
 
 `data` {Object} initialize the model with some data
@@ -22,7 +22,7 @@ new umodel([data], [options])
 - `get key` get a key, throwing an error if a parent key is not set
 - `set key, value` set a key, lazy-creating parent keys along the way if nested
 - `setnx key, value` like `set`, but only if the given key has not been set yet
-- `on "event1 [event2...], :[property]", fn` call `fn` with `{key: value}, this` when an event is triggered
+- `on "event1 [event2...], :[property]", fn` call `fn` with `key, [value], modelInstance` when an event is triggered
 - `trigger event, key` trigger an event set with `.on`
 
 ## Usage
