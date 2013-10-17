@@ -23,7 +23,7 @@ shallow object extend
 
 ## µModel
 
-	class Model
+	class umodel
 
 		constructor: (@_data = {}, options) ->
 
@@ -225,15 +225,3 @@ Internal key parser, parses strings to arrays.
 		_split: (key) ->
 
 			(@_normalize key).split @options.separator
-
-UMD (play nice with AMD, CommonJS, globals)
-
-	umd = (name, factory) ->
-		if typeof exports is 'object'
-			module.exports = factory
-		else if typeof define is 'function' and define.amd
-			define name, [], -> factory
-		else
-			@[name] = factory
-
-	umd 'umodel', Model

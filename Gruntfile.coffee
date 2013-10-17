@@ -7,6 +7,8 @@ module.exports = (grunt) ->
 			compile:
 				files:
 					'umodel.js': 'umodel.coffee.md'
+				options:
+					bare: true
 
 		uglify:
 
@@ -25,8 +27,16 @@ module.exports = (grunt) ->
 						'umodel.js'
 					]
 
+		umd:
+			all:
+				src: 'umodel.js'
+				objectToExport: 'umodel'
+				amdModuleId: 'umodel'
+				globalAlias: 'umodel'
+
 
 	grunt.loadNpmTasks 'grunt-contrib-coffee'
 	grunt.loadNpmTasks 'grunt-contrib-uglify'
+	grunt.loadNpmTasks 'grunt-umd'
 
-	grunt.registerTask 'default', ['coffee', 'uglify']
+	grunt.registerTask 'default', ['coffee', 'umd', 'uglify']
