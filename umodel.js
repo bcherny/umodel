@@ -42,17 +42,17 @@
 
     Model.prototype.get = function(key) {
       this.trigger('get', key);
-      return this._get(this._split(key));
+      return this._get(this._split(key), this._data);
     };
 
     Model.prototype.set = function(key, value) {
       this.trigger('set', key, value);
-      return this._set(this._split(key), value);
+      return this._set(this._split(key), value, false, this._data);
     };
 
     Model.prototype.setnx = function(key, value) {
       this.trigger('setnx', key, value);
-      return this._set(this._split(key), value, true);
+      return this._set(this._split(key), value, true, this._data);
     };
 
     Model.prototype.on = function(eventAndProperty, fn) {
@@ -100,9 +100,6 @@
 
     Model.prototype._get = function(key, parent, accumulator) {
       var head;
-      if (parent == null) {
-        parent = this._data;
-      }
       if (accumulator == null) {
         accumulator = [];
       }
@@ -121,9 +118,6 @@
       var head;
       if (nx == null) {
         nx = false;
-      }
-      if (parent == null) {
-        parent = this._data;
       }
       if (accumulator == null) {
         accumulator = [];

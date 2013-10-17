@@ -26,6 +26,7 @@ exports.umodel =
 		model = new Model
 		model._data =
 			foo: 'bar'
+			bar: null
 			baz:
 				moo: 'boo'
 
@@ -42,6 +43,11 @@ exports.umodel =
 		# error
 		err = -> model.get 'woo'
 		test.throws err, null, 'getting an undefined key throws an error'
+
+		# falsey value
+		actual = model.get 'bar'
+		expected = null
+		test.equal actual, expected, 'get falsey'
 
 		test.done()
 

@@ -52,7 +52,7 @@ Trigger events?
 
 Get and return
 
-			@_get @_split key
+			@_get @_split(key), @_data
 
 ### Set
 `set {Mixed}key, {Mixed}value`
@@ -65,7 +65,7 @@ Trigger events?
 
 Set and return
 
-			@_set @_split(key), value
+			@_set @_split(key), value, false, @_data
 			
 ### SetNX
 `setnx {Mixed}key, {Mixed}value`
@@ -78,7 +78,7 @@ Trigger events?
 
 Set if key is not yet defined in our model and return
 
-			@_set @_split(key), value, true
+			@_set @_split(key), value, true, @_data
 
 ### On
 `on {String}"event1 [event2...], :[property]", {Function}fn` or `on {Object}map`
@@ -117,7 +117,7 @@ Bind and call
 ### _get
 Internal `get` implementation. `accumulator` is for debugging purposes, to return the last defined key when a key is undefined
 
-		_get: (key, parent = @_data, accumulator = []) ->
+		_get: (key, parent, accumulator = []) ->
 
 Get the next key
 
@@ -147,7 +147,7 @@ Return the result
 ### Internal `set` implementation
 `nx` is a flag for "set only if the given key has not been set yet". `accumulator` is a key trace for debugging purposes
 
-		_set: (key, value, nx = false, parent = @_data, accumulator = []) ->
+		_set: (key, value, nx = false, parent, accumulator = []) ->
 
 Get the next key
 
