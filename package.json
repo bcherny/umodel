@@ -1,6 +1,6 @@
 {
   "name": "umodel",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Tiny, generic, fully tested model.",
   "main": "umodel.js",
   "repository": {
