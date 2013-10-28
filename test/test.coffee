@@ -41,8 +41,9 @@ exports.umodel =
 		test.equal actual, expected, 'deep get'
 
 		# error
-		err = -> model.get 'woo'
-		test.throws err, null, 'getting an undefined key throws an error'
+		actual = model.get 'woo'
+		expected = undefined
+		test.equal actual, expected, 'getting an undefined key returns undefined'
 
 		# falsey value
 		actual = model.get 'bar'
