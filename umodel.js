@@ -115,7 +115,7 @@ umodel = (function() {
     head = key.shift();
     if (head) {
       if (!(head in parent)) {
-        throw new Error('get: key "' + head + '" does not exist in "' + accumulator.join('/') + '"');
+        return void 0;
       }
       accumulator.push(head);
       return this._get(key, parent[head], accumulator);

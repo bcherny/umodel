@@ -127,10 +127,10 @@ Ensure that the key is defined
 
 			if head
 
-Throw an error if key does not exist
+Return undefined if key does not exist
 
 				if head not of parent
-					throw new Error 'get: key "' + head + '" does not exist in "' + accumulator.join('/') + '"'
+					return undefined
 
 Otherwise, accumulate successful lookups for debugging purposes
 
