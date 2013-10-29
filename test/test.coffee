@@ -198,6 +198,24 @@ exports.umodel =
 		test.equal called, 2, 'on accepts objects'
 		test.done()
 
+	'on (set gives old value)': (test) ->
+
+		prev = 'bar'
+		curr = 'baz'
+
+		model = new Model
+			foo: prev
+
+		model.on 'set', (key, value, previous) ->
+			curr = value
+			prev = previous
+
+		model.set 'foo', 'baz'
+
+		test.equal prev, 'bar', 'previous value'
+		test.equal curr, 'baz', 'current value'
+		test.done()
+
 	'trigger': (test) ->
 
 		model = new Model

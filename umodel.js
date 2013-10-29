@@ -99,10 +99,10 @@ umodel = (function() {
             _results1 = [];
             for (_i = 0, _len = fns.length; _i < _len; _i++) {
               fn = fns[_i];
-              if (oldValue) {
-                _results1.push(fn.call(this, path, value, oldValue, this));
+              if (oldValue != null) {
+                _results1.push(fn.call(this, path, value, oldValue));
               } else {
-                _results1.push(fn.call(this, path, value, this));
+                _results1.push(fn.call(this, path, value));
               }
             }
             return _results1;

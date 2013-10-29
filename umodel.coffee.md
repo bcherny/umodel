@@ -123,10 +123,10 @@ Bind and call
 
 						for fn in fns
 
-							if oldValue
-								fn.call @, path, value, oldValue, @
+							if oldValue?
+								fn.call @, path, value, oldValue
 							else
-								fn.call @, path, value, @
+								fn.call @, path, value
 
 ### _get
 Internal `get` implementation. `accumulator` is for debugging purposes, to return the last defined key when a key is undefined
