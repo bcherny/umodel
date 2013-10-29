@@ -55,13 +55,13 @@ umodel = (function() {
   };
 
   umodel.prototype.set = function(key, value) {
-    this.trigger('set', key, value);
-    return this._set(this._split(key), value, false, this._data);
+    this._set(this._split(key), value, false, this._data);
+    return this.trigger('set', key, value);
   };
 
   umodel.prototype.setnx = function(key, value) {
-    this.trigger('setnx', key, value);
-    return this._set(this._split(key), value, true, this._data);
+    this._set(this._split(key), value, true, this._data);
+    return this.trigger('setnx', key, value);
   };
 
   umodel.prototype.on = function(eventAndProperty, fn) {

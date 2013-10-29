@@ -59,26 +59,26 @@ Get and return
 
 		set: (key, value) ->
 
-Trigger events?
-
-			@trigger 'set', key, value
-
 Set and return
 
 			@_set @_split(key), value, false, @_data
+
+Trigger events?
+
+			@trigger 'set', key, value
 			
 ### SetNX
 `setnx {Mixed}key, {Mixed}value`
 
 		setnx: (key, value) ->
 
-Trigger events?
-
-			@trigger 'setnx', key, value
-
 Set if key is not yet defined in our model and return
 
 			@_set @_split(key), value, true, @_data
+
+Trigger events?
+
+			@trigger 'setnx', key, value
 
 ### On
 `on {String}"event1 [event2...], :[property]", {Function}fn` or `on {Object}map`
