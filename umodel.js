@@ -55,13 +55,17 @@ umodel = (function() {
   };
 
   umodel.prototype.set = function(key, value) {
+    var old;
+    old = this._get(this._split(key), this._data);
     this._set(this._split(key), value, false, this._data);
-    return this.trigger('set', key, value);
+    return this.trigger('set', key, value, old);
   };
 
   umodel.prototype.setnx = function(key, value) {
+    var old;
+    old = this._get(this._split(key), this._data);
     this._set(this._split(key), value, true, this._data);
-    return this.trigger('setnx', key, value);
+    return this.trigger('setnx', key, value, old);
   };
 
   umodel.prototype.on = function(eventAndProperty, fn) {
@@ -78,7 +82,7 @@ umodel = (function() {
     }
   };
 
-  umodel.prototype.trigger = function(event, path, value) {
+  umodel.prototype.trigger = function(event, path, value, oldValue) {
     var e, fn, fns, _ref, _results;
     if (path == null) {
       path = '*';
@@ -95,7 +99,11 @@ umodel = (function() {
             _results1 = [];
             for (_i = 0, _len = fns.length; _i < _len; _i++) {
               fn = fns[_i];
-              _results1.push(fn.call(this, path, value, this));
+              if (oldValue) {
+                _results1.push(fn.call(this, path, value, oldValue, this));
+              } else {
+                _results1.push(fn.call(this, path, value, this));
+              }
             }
             return _results1;
           }).call(this));

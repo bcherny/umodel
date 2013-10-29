@@ -59,18 +59,27 @@ Get and return
 
 		set: (key, value) ->
 
+Get old value
+
+			old = @_get @_split(key), @_data
+
 Set and return
 
 			@_set @_split(key), value, false, @_data
 
 Trigger events?
 
-			@trigger 'set', key, value
+			@trigger 'set', key, value, old
 			
 ### SetNX
 `setnx {Mixed}key, {Mixed}value`
 
 		setnx: (key, value) ->
+
+Get old value
+
+			old = @_get @_split(key), @_data
+
 
 Set if key is not yet defined in our model and return
 
@@ -78,7 +87,7 @@ Set if key is not yet defined in our model and return
 
 Trigger events?
 
-			@trigger 'setnx', key, value
+			@trigger 'setnx', key, value, old
 
 ### On
 `on {String}"event1 [event2...], :[property]", {Function}fn` or `on {Object}map`
@@ -96,7 +105,7 @@ Trigger events?
 ### Trigger
 Trigger 
 
-		trigger: (event, path = '*', value) ->
+		trigger: (event, path = '*', value, oldValue) ->
 
 			path = @_normalize path
 
@@ -112,7 +121,12 @@ Add `/` to paths to prevent false positives (eg. `foo/ba` shouldn't match `foo/b
 
 Bind and call
 
-						fn.call @, path, value, @ for fn in fns
+						for fn in fns
+
+							if oldValue
+								fn.call @, path, value, oldValue, @
+							else
+								fn.call @, path, value, @
 
 ### _get
 Internal `get` implementation. `accumulator` is for debugging purposes, to return the last defined key when a key is undefined
